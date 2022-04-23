@@ -28,12 +28,15 @@ namespace WindowsFormsApp1
         object lat = 0;
         object len = 0;
         int col_markers = 0;
+
+        
         public Form1()
         {
             InitializeComponent();
             
             gMapControl1.MouseUp += _gMapControl_MouseUp;
             gMapControl1.MouseDown += _gMapControl_MouseDown;
+            
         }
 
 
@@ -42,8 +45,8 @@ namespace WindowsFormsApp1
             GMap.NET.GMaps.Instance.Mode = AccessMode.ServerAndCache;
             gMapControl1.MapProvider = GMap.NET.MapProviders.GoogleMapProvider.Instance;
             gMapControl1.Position = new GMap.NET.PointLatLng(55.030488, 82.925218);
-            gMapControl1.ShowCenter = false;
 
+            gMapControl1.ShowCenter = false;
             gMapControl1.MinZoom = 2; 
             gMapControl1.MaxZoom = 16; 
             gMapControl1.Zoom = 4; 
@@ -51,7 +54,7 @@ namespace WindowsFormsApp1
             GMapOverlay markers = new GMapOverlay("markers");
 
             db.openconnection();
-            SqlDataAdapter adapter = new SqlDataAdapter();
+
             SqlCommand command = new SqlCommand("SELECT * FROM markers", db.getconnection());
             
             SqlDataReader reader = command.ExecuteReader();
@@ -59,7 +62,7 @@ namespace WindowsFormsApp1
             if (reader.HasRows)
             {
 
-                while ( reader.Read())
+                while ( reader.Read() )
                 {
                 col_markers++;
 
@@ -74,7 +77,7 @@ namespace WindowsFormsApp1
                     GMarkerGoogleType.lightblue);
 
                 marker1.Tag = id[col_markers-1];
-                    
+                marker1.ToolTipText = (string)mark;    
                 markers.Markers.Add(marker1);
 
                 gMapControl1.Overlays.Add(markers);
@@ -117,9 +120,10 @@ namespace WindowsFormsApp1
             _selectedMarker = null;
         }
 
+        
         private void gMapControl1_MouseMove(object sender, MouseEventArgs e)
         {
-
+           
         }
 
         private void gMapControl1_OnMapZoomChanged()
